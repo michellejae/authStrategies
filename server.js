@@ -5,10 +5,15 @@ const methodOverride = require(`method-override`);
 const app = express();
 app.engine(`.hbs`, handlebars({defaultLayout: `main`, extname: `hbs`}))
 app.set(`view engine`, `.hbs`);
-app.use(methodOverride('_method'));
+//app.use(methodOverride('_method'));
 
 
 const PORT = process.env.PORT || 4040;
+
+app.get(`/`, (req, res) => {
+  res.render('home')
+})
+
 
 // app.get(`/`, (req, res) => {
 // res.send(`smoke test`)
