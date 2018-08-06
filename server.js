@@ -10,27 +10,22 @@ const CONFIG = require(`./config/config.json`);
 const app = express();
 app.engine(`.hbs`, handlebars({defaultLayout: `main`, extname: `hbs`}))
 app.set(`view engine`, `.hbs`);
-//app.use(methodOverride('_method'));
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '/public')));
 
 
 const PORT = process.env.PORT || 4040;
 
 
-
-passport.use(new googleStrategy({
-  //options for google strategies
-  callbackURL: '/auth/google/redirect',
-  clientID: CONFIG.auth1.clientID,
-  clientSecret: CONFIG.auth1.clientSecret
-}, () => {
-  //passport callback function
-})
-)
-
 const authRoute = require(`./routes/index.js`);
+const passportSetup = require(`./helpers/passport`);
 
 app.use(bodyParser.urlencoded({ extended: true}));
+
+
+
+
+
 app.use(`/auth`, authRoute)
 
 
