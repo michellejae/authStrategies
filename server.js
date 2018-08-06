@@ -5,7 +5,8 @@ const path = require(`path`);
 const handlebars = require(`express-handlebars`);
 const bodyParser = require(`body-parser`)
 const methodOverride = require(`method-override`);
-const CONFIG = require(`./config/config.json`);
+const mongoose = require(`mongoose`);
+const CONFIG = require(`./config/config.js`);
 
 const app = express();
 app.engine(`.hbs`, handlebars({defaultLayout: `main`, extname: `hbs`}))
@@ -20,10 +21,17 @@ const PORT = process.env.PORT || 4040;
 const authRoute = require(`./routes/index.js`);
 const passportSetup = require(`./helpers/passport`);
 
-app.use(bodyParser.urlencoded({ extended: true}));
+//app.use(bodyParser.urlencoded({ extended: true}));
 
 
-
+mongoose.connect(CONFIG.mongodb.dbURI, { useNewUrlParser: true }).then( 
+  () => {
+  console.log('connected to mongo')
+  }
+).catch((err) => {
+  console.log(err)
+  console.log('connection to database failed')
+})
 
 
 app.use(`/auth`, authRoute)

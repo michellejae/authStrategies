@@ -1,5 +1,7 @@
 const express = require(`express`);
 const passport = require(`passport`);
+const mongoose = require(`mongoose`);
+const CONFIG = require(`../config/config.js`)
 
 
 const router = express.Router();
