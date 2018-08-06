@@ -1,0 +1,9 @@
+.Buttons {
+  background-color: aquamarine;
+  display: flex;
+}
+
+#btn {
+  height: 50px;
+  margin: 10px;
+}
