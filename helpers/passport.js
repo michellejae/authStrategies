@@ -8,7 +8,10 @@ passport.use(new googleStrategy({
   callbackURL: '/auth/google/redirect',
   clientID: CONFIG.auth1.clientID,
   clientSecret: CONFIG.auth1.clientSecret
-}, () => {
-  //passport callback function
+}, (accessToken, refreshToken, profile, done) => {
+    //passport callback function
+  User.findOrCreate({ googleId: profile.id }, function (err, user) {
+    return done(err, user);
+  });
 })
 )
