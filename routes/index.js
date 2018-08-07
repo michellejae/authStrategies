@@ -14,19 +14,26 @@ router.get('/login', (req, res) => {
 })
 
 router.get('/logout', (req, res) => {
-  //handle with passport
-  res.send('logging out')
+  req.logout()
+  res.render('./templates/logout.hbs')
 })
 
 router.get('/google', passport.authenticate('google', {
   scope:['profile']
 }))
 
-router.get('/google/redirect', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) =>{
-  res.redirect('/')
+router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
+  res.redirect('/auth/profiles')
 })
 
+router.get('/profiles', isAuthenticated, (req, res) => {
+  res.render('./templates/profiles.hbs')
+})
 
+function isAuthenticated (req, res, next) {
+  if(req.isAuthenticated()) { next();}
+  else { res.redirect('/'); }
+}
 
 
 module.exports = router;
