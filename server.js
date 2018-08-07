@@ -3,15 +3,14 @@ const passport = require(`passport`);
 const googleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const path = require(`path`);
 const handlebars = require(`express-handlebars`);
-const bodyParser = require(`body-parser`)
-const methodOverride = require(`method-override`);
 const mongoose = require(`mongoose`);
 const CONFIG = require(`./config/config.js`);
+const cookieSession = require(`cookie-session`);
 
 const app = express();
 app.engine(`.hbs`, handlebars({defaultLayout: `main`, extname: `hbs`}))
 app.set(`view engine`, `.hbs`);
-app.use(methodOverride('_method'));
+//app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '/public')));
 
 
@@ -23,6 +22,15 @@ const passportSetup = require(`./helpers/passport`);
 
 //app.use(bodyParser.urlencoded({ extended: true}));
 
+// session shit
+app.use(cookieSession({
+  maxAge: 24 * 60 * 60 * 1000, //cookie is only a day long
+  keys: [CONFIG.passport.SECRET]
+}))
+
+// passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 mongoose.connect(CONFIG.mongodb.dbURI, { useNewUrlParser: true }).then( 
   () => {

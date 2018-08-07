@@ -3,6 +3,16 @@ const googleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const CONFIG = require(`../config/config.js`);
 const User = require(`../models/user-model`);
 
+passport.serializeUser((user, done) => {
+  done(null,user.id);
+})
+
+passport.deserializeUser((id, done) => {
+  User.findById(id).then((user) => {
+    done(null,user);
+  })
+})
+
 
 passport.use(new googleStrategy({
   //options for google strategies
@@ -13,13 +23,15 @@ passport.use(new googleStrategy({
 
   User.findOne({googleId: profile.id}).then((currentUser) => {
     if(currentUser){
-      console.log(`new is ${currentUser}`)
+      console.log(`new is ${currentUser} `);
+      done(null, currentUser);
     } else {
       new User({
         username: profile.displayName,
         googleId: profile.id
       }).save().then((newUser) => {
-        console.log(`new user created ${newUser}`)
+        console.log(`new user created ${newUser}`);
+        done(null, newUser);
       });
     }
   });
